@@ -38,4 +38,21 @@ public class TesteDataHoraController {
         assertEquals(HttpStatus.OK.value(), response.getStatusCode());
         assertNotNull(json.get("dataHora"));
     }
+
+    @Test
+    void deveLancarExcecaoTimezoneInvalido() {
+        var metodo = "GET";
+        var endpoint = "/data-hora?timezone=teste";
+
+        var response = when()
+                .request(metodo, endpoint)
+                .then()
+                .extract()
+                .response();
+
+        var json = response.jsonPath();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatusCode());
+        assertEquals("por favor, forneça um timezone válido", json.get("mensagem"));
+    }
 }
